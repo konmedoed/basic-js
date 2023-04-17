@@ -22,9 +22,54 @@ const { NotImplementedError } = require('../extensions/index.js');
  * }
  *
  */
-function getDNSStats(/* domains */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function getDNSStats(domainsArray) {
+  let array = domainsArray.map(item=>transformItem(item))
+  function transformItem(item){
+    arr=item.split('');
+    let domains = [];
+    let accum=['.'];
+    for (let i=0; i<arr.length; i++){
+        if (arr[i]!='.')
+            accum.push(arr[i])
+        else {
+            domains.push(accum.join(''));
+            accum=['.'];
+        }
+    }
+    domains.push(accum.join(''));
+    domains.reverse();
+  
+    //группируем домены
+    let cash=[];
+    let groupDomains = [];
+    domains.forEach(item=>{
+      cash.push(item);
+      groupDomains.push(cash.join(''))
+    })
+    return groupDomains
+  }
+  let unionArr = [];
+  array.forEach(item=>{
+    unionArr=unionArr.concat(item)
+  });
+
+  let output = {};
+  reducer(unionArr);
+  function reducer(array){
+      let copiedArray = array.slice();
+      while (copiedArray.length!=0){
+          debugger
+          let key=copiedArray[0];
+          val = 0;
+          copiedArray.forEach(item=>{
+              if (item===key) val++
+          })
+          let cash = copiedArray.filter(item=>(item!=key));
+          copiedArray = cash.slice();
+          output[key]=val;
+      }
+  }
+  return output;
 }
 
 module.exports = {
