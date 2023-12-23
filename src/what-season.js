@@ -16,10 +16,23 @@ function getSeason(date) {
     return 'Unable to determine the time of year!'
   }
   if (typeof(date) != 'object' || Array.isArray(date) || !Date.parse(date)){
-    return "Invalid date!"
+    throw new Error ("Invalid date!");
   }
 
-  let month = date.getMonth();
+  // let month = date.getMonth();
+  let month;
+  try {
+    month = date.getMonth();
+  }
+  catch (err) {
+    throw new Error ("Invalid date!");
+  }
+  try {
+    let check = date.setMinutes(0);
+  }
+  catch (err) {
+    throw new Error ("Invalid date!");
+  }
   
   function season(val){
     if (val>=0 && val<2 || val === 11) return 'winter'
